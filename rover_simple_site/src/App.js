@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import SitterList from "./components/sitter-list.component";
-import CreateList from "./components/create-list.component";
+import CreateList from "./components/create-appointment.component";
 import EditList from "./components/edit-list.component";
 
 import logo from "./logo.png";
@@ -24,7 +24,7 @@ class App extends Component {
                   <Link to="/" className="nav-link">Sitters</Link>
                 </li>
                 <li className="navbar-item">
-                  <Link to="/create" className="nav-link">Create Appointment</Link>
+                  <Link to="/createappointment" className="nav-link">Create Appointment</Link>
                 </li>
               </ul>
             </div>
@@ -33,7 +33,7 @@ class App extends Component {
 
           <Route path="/" exact component={SitterList} />
           <Route path="/edit/:id" component={EditList} />
-          <Route path="/create" component={CreateList} />
+          <Route path="/createappointment" component={CreateList} />
         </div>
       </Router>
     );

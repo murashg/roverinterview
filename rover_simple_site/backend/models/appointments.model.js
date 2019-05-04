@@ -1,27 +1,27 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 let AppointmentSchema = new Schema({
-    owner: {
+    appointment_owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Owner'
     },
-    sitter: {
+    appointment_sitter: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Sitter'
     },
-    rating: {
-      type: Double
+    appointment_rating: {
+      type: Number
     },
-    sitterImage: {
+    appointment_sitterImage: {
       type: String
     },
-    startDate: {
+    appointment_startDate: {
       type: String
     },
-    endDate: {
+    appointment_endDate: {
       type: String
     },
-    text: {
+    appointment_text: {
       type: String
     }
 });

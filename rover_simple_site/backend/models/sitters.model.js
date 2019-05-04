@@ -11,13 +11,13 @@ let SitterSchema = new Schema({
         type: String
     },
     sitter_overall_rank: {
-        type: Double
+        type: Number
     },
     sitter_rank: {
-        type: Double
+        type: Number
     },
     sitter_score: {
-        type: Double
+        type: Number
     },
     sitter_history: [{
         appointment_history: {

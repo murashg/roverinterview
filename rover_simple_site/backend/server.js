@@ -10,7 +10,7 @@ const PORT = 4000;
 
 let Owner = require('./models/owners.model');
 let Sitter = require('./models/sitters.model');
-let Appointment = require('./models/appointment.model');
+let Appointment = require('./models/appointments.model');
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -45,6 +45,7 @@ sitterRoutes.route('/update/:id').post(function(req, res) {
     } else {
       sitter.sitter_email = req.body.sitter_email;
       sitter.sitter_phone_number = req.body.sitter_phone_number;
+      sitter.sitter_name = req.body.sitter_name;
       sitter.sitter_score = req.body.sitter_score;
       sitter.sitter_rank = req.body.sitter_rank;
       sitter.sitter_overall_rank = req.body.sitter_overall_rank;
