@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const dbRoutes = express.Router();
 const ownerRoutes = express.Router();
 const sitterRoutes = express.Router();
 const appointmentRoutes = express.Router();
@@ -11,6 +12,7 @@ const PORT = 4000;
 let Owner = require('./models/owners.model');
 let Sitter = require('./models/sitters.model');
 let Appointment = require('./models/appointments.model');
+let RoverDB = require('./models/db.model');
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -19,6 +21,12 @@ mongoose.connect('mongodb://127.0.0.1:27017/todos', { useNewUrlParser: true });
 const connection = mongoose.connection;
 connection.once('open', function() {
     console.log("MongoDB database connection established successfully");
+})
+
+dbRoutes.route('/').get(function(req, res) {
+  RoverDB.find(function(err, db) {
+
+  })
 })
 
 sitterRoutes.route('/').get(function(req, res) {
@@ -71,6 +79,7 @@ sitterRoutes.route('/add').post(function(req, res) {
         });
 });
 
+app.use('/db', dbRoutes);
 app.use('/owners', ownerRoutes);
 app.use('/sitters', sitterRoutes);
 app.use('/appointments', appointmentRoutes);
