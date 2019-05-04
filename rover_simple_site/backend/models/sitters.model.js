@@ -10,10 +10,10 @@ let SitterSchema = new Schema({
     sitter_name: {
         type: String
     },
-    sitter_overall_rank: {
+    sitter_overall_rating: {
         type: Number
     },
-    sitter_rank: {
+    sitter_rating: {
         type: Number
     },
     sitter_score: {

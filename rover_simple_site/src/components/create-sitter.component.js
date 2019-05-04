@@ -5,65 +5,33 @@ export default class CreateList extends Component {
   constructor(props) {
         super(props);
 
-        this.onChangeAppointmentSitter = this.onChangeAppointmentSitter.bind(this);
-        this.onChangeAppointmentOwner = this.onChangeAppointmentOwner.bind(this);
-        this.onChangeAppointmentStartDate = this.onChangeAppointmentStartDate.bind(this);
-        this.onChangeAppointmentEndDate = this.onChangeAppointmentEndDate.bind(this);
-        this.onChangeAppointmentRating = this.onChangeAppointmentRating.bind(this);
-        this.onChangeAppointmentSitterImage = this.onChangeAppointmentSitterImage.bind(this);
-        this.onChangeAppointmentText = this.onChangeAppointmentText.bind(this);
+        this.onChangeSitterName = this.onChangeSitterName.bind(this);
+        this.onChangeSitterEmail = this.onChangeSitterEmail.bind(this);
+        this.onChangeSitterPhoneNumber = this.onChangeSitterPhoneNumber.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
         this.state = {
-            appointment_sitter: '',
-            appointment_owner: '',
-            appointment_startDate: '',
-            appointment_endDate: '',
-            appointment_rating: 5.0,
-            appointment_text: '',
-            appointment_sitterImage: ''
+            sitter_name: '',
+            sitter_email: '',
+            sitter_phone_number: ''
         }
     }
 
-    onChangeAppointmentSitter(e) {
+    onChangeSitterName(e) {
         this.setState({
-            appointment_sitter: e.target.value
+            sitter_name: e.target.value
         });
     }
 
-    onChangeAppointmentOwner(e) {
+    onChangeSitterEmail(e) {
         this.setState({
-            appointment_owner: e.target.value
+            sitter_email: e.target.value
         });
     }
 
-    onChangeAppointmentStartDate(e) {
+    onChangeSitterPhoneNumber(e) {
         this.setState({
-            appointment_startDate: e.target.value
-        });
-    }
-
-    onChangeAppointmentEndDate(e) {
-        this.setState({
-            appointment_endDate: e.target.value
-        });
-    }
-
-    onChangeAppointmentRating(e) {
-        this.setState({
-            appointment_rating: e.target.value
-        });
-    }
-
-    onChangeAppointmentText(e) {
-        this.setState({
-            appointment_text: e.target.value
-        });
-    }
-
-    onChangeAppointmentSitterImage(e) {
-        this.setState({
-            appointment_sitterImage: e.target.value
+            sitter_phone_number: e.target.value
         });
     }
 
@@ -71,97 +39,53 @@ export default class CreateList extends Component {
         e.preventDefault();
 
         console.log(`Form submitted:`);
-        console.log(`Appointment Sitter: ${this.state.appointment_sitter}`);
-        console.log(`Appointment Owner: ${this.state.appointment_owner}`);
-        console.log(`Appointment Rating: ${this.state.appointment_rating}`);
-        console.log(`Appointment Start Date: ${this.state.appointment_rating}`);
-        console.log(`Appointment End Date: ${this.state.appointment_rating}`);
-        console.log(`Appointment Text: ${this.state.appointment_rating}`);
-        console.log(`Appointment Sitter Image: ${this.state.appointment_sitterImage}`);
+        console.log(`Sitter Name: ${this.state.sitter_name}`);
+        console.log(`Sitter Email: ${this.state.sitter_email}`);
+        console.log(`Sitter Phone Number: ${this.state.sitter_phone_number}`);
 
-        const newAppointment = {
-          appointment_sitter: this.state.appointment_sitter,
-          appointment_owner: this.state.appointment_owner,
-          appointment_startDate: this.state.appointment_startDate,
-          appointment_endDate: this.state.appointment_endDate,
-          appointment_rating: this.state.appointment_rating,
-          appointment_text: this.state.appointment_text,
-          appointment_sitterImage: this.state.appointment_sitterImage
+        const newSitter = {
+          sitter_name: this.state.sitter_name,
+          sitter_email: this.state.sitter_email,
+          sitter_phone_number: this.state.sitter_phone_number
         };
 
-        axios.post('http://localhost:4000/createappointment/add', newAppointment)
+        axios.post('http://localhost:4000/createsitter/add', newSitter)
              .then(res => console.log(res.data));
 
         this.setState({
-          appointment_sitter: '',
-          appointment_owner: '',
-          appointment_startDate: '',
-          appointment_endDate: '',
-          appointment_rating: 5.0,
-          appointment_text: '',
-          appointment_sitterImage: ''
+          sitter_name: '',
+          sitter_email: '',
+          sitter_phone_number: ''
         })
     }
 
     render() {
         return (
           <div style={{marginTop: 10}}>
-              <h3>Create Appointment</h3>
+              <h3>Create Sitter</h3>
               <form onSubmit={this.onSubmit}>
                   <div className="form-group">
-                      <label>Sitter: </label>
+                      <label>Name: </label>
                       <input  type="text"
                               className="form-control"
-                              value={this.state.appointment_sitter}
-                              onChange={this.onChangeAppointmentSitter}
+                              value={this.state.sitter_name}
+                              onChange={this.onChangeSitterName}
                               />
                   </div>
                   <div className="form-group">
-                      <label>Owner: </label>
+                      <label>Email: </label>
                       <input  type="text"
                               className="form-control"
-                              value={this.state.appointment_owner}
-                              onChange={this.onChangeAppointmentOwner}
+                              value={this.state.sitter_email}
+                              onChange={this.onChangeSitterEmail}
                               />
                   </div>
                   <div className="form-group">
-                      <label>Rating: </label>
+                      <label>Phone Number: </label>
                       <input  type="text"
                               className="form-control"
-                              value={this.state.appointment_rating}
-                              onChange={this.onChangeAppointmentRating}
-                              />
-                  </div>
-                  <div className="form-group">
-                      <label>Start Date: </label>
-                      <input  type="text"
-                              className="form-control"
-                              value={this.state.appointment_startDate}
-                              onChange={this.onChangeAppointmentStartDate}
-                              />
-                  </div>
-                  <div className="form-group">
-                      <label>End Date: </label>
-                      <input  type="text"
-                              className="form-control"
-                              value={this.state.appointment_endDate}
-                              onChange={this.onChangeAppointmentEndDate}
-                              />
-                  </div>
-                  <div className="form-group">
-                      <label>Text: </label>
-                      <input  type="text"
-                              className="form-control"
-                              value={this.state.appointment_text}
-                              onChange={this.onChangeAppointmentText}
-                              />
-                  </div>
-                  <div className="form-group">
-                      <label>Sitter Image: </label>
-                      <input  type="text"
-                              className="form-control"
-                              value={this.state.appointment_sitterImage}
-                              onChange={this.onChangeAppointmentSitterImage}
+                              value={this.state.sitter_phone_number}
+                              onChange={this.onChangeSitterPhoneNumber}
                               />
                   </div>
                   <div className="form-group">
