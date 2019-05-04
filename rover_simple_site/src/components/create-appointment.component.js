@@ -10,7 +10,6 @@ export default class CreateList extends Component {
         this.onChangeAppointmentStartDate = this.onChangeAppointmentStartDate.bind(this);
         this.onChangeAppointmentEndDate = this.onChangeAppointmentEndDate.bind(this);
         this.onChangeAppointmentRating = this.onChangeAppointmentRating.bind(this);
-        this.onChangeAppointmentSitterImage = this.onChangeAppointmentSitterImage.bind(this);
         this.onChangeAppointmentText = this.onChangeAppointmentText.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
@@ -20,8 +19,7 @@ export default class CreateList extends Component {
             appointment_startDate: '',
             appointment_endDate: '',
             appointment_rating: 5.0,
-            appointment_text: '',
-            appointment_sitterImage: ''
+            appointment_text: ''
         }
     }
 
@@ -61,12 +59,6 @@ export default class CreateList extends Component {
         });
     }
 
-    onChangeAppointmentSitterImage(e) {
-        this.setState({
-            appointment_sitterImage: e.target.value
-        });
-    }
-
     onSubmit(e) {
         e.preventDefault();
 
@@ -77,7 +69,6 @@ export default class CreateList extends Component {
         console.log(`Appointment Start Date: ${this.state.appointment_rating}`);
         console.log(`Appointment End Date: ${this.state.appointment_rating}`);
         console.log(`Appointment Text: ${this.state.appointment_rating}`);
-        console.log(`Appointment Sitter Image: ${this.state.appointment_sitterImage}`);
 
         const newAppointment = {
           appointment_sitter: this.state.appointment_sitter,
@@ -85,8 +76,7 @@ export default class CreateList extends Component {
           appointment_startDate: this.state.appointment_startDate,
           appointment_endDate: this.state.appointment_endDate,
           appointment_rating: this.state.appointment_rating,
-          appointment_text: this.state.appointment_text,
-          appointment_sitterImage: this.state.appointment_sitterImage
+          appointment_text: this.state.appointment_text
         };
 
         axios.post('http://localhost:4000/createappointment/add', newAppointment)
@@ -154,14 +144,6 @@ export default class CreateList extends Component {
                               className="form-control"
                               value={this.state.appointment_text}
                               onChange={this.onChangeAppointmentText}
-                              />
-                  </div>
-                  <div className="form-group">
-                      <label>Sitter Image: </label>
-                      <input  type="text"
-                              className="form-control"
-                              value={this.state.appointment_sitterImage}
-                              onChange={this.onChangeAppointmentSitterImage}
                               />
                   </div>
                   <div className="form-group">

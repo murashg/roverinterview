@@ -8,12 +8,14 @@ export default class CreateList extends Component {
         this.onChangeSitterName = this.onChangeSitterName.bind(this);
         this.onChangeSitterEmail = this.onChangeSitterEmail.bind(this);
         this.onChangeSitterPhoneNumber = this.onChangeSitterPhoneNumber.bind(this);
+        this.onChangeSitterImage = this.onChangeSitterImage.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
         this.state = {
             sitter_name: '',
             sitter_email: '',
-            sitter_phone_number: ''
+            sitter_phone_number: '',
+            sitter_image: ''
         }
     }
 
@@ -35,27 +37,43 @@ export default class CreateList extends Component {
         });
     }
 
+    onChangeSitterImage(e) {
+        this.setState({
+            sitter_image: e.target.value
+        });
+    }
+
+    calcSitterScore(s) {
+      let set = new Set();
+      for (var i = 0; i < s.length; i++){
+        set.add(s.charAt(i));
+      }
+      return 5 * (set.size / 26);
+    }
+
     onSubmit(e) {
         e.preventDefault();
-
-        console.log(`Form submitted:`);
-        console.log(`Sitter Name: ${this.state.sitter_name}`);
-        console.log(`Sitter Email: ${this.state.sitter_email}`);
-        console.log(`Sitter Phone Number: ${this.state.sitter_phone_number}`);
 
         const newSitter = {
           sitter_name: this.state.sitter_name,
           sitter_email: this.state.sitter_email,
-          sitter_phone_number: this.state.sitter_phone_number
+          sitter_phone_number: this.state.sitter_phone_number,
+          sitter_stays: 0,
+          sitter_rating: 0,
+          sitter_score: this.calcSitterScore(this.state.sitter_name),
+          sitter_image: this.state.sitter_image
         };
 
-        axios.post('http://localhost:4000/createsitter/add', newSitter)
+        console.log(newSitter);
+
+        axios.post('http://localhost:4000/sitters/add', newSitter)
              .then(res => console.log(res.data));
 
         this.setState({
           sitter_name: '',
           sitter_email: '',
-          sitter_phone_number: ''
+          sitter_phone_number: '',
+          sitter_image: ''
         })
     }
 
@@ -64,6 +82,14 @@ export default class CreateList extends Component {
           <div style={{marginTop: 10}}>
               <h3>Create Sitter</h3>
               <form onSubmit={this.onSubmit}>
+                  <div className="form-group">
+                      <label>Image: </label>
+                      <input  type="text"
+                              className="form-control"
+                              value={this.state.sitter_image}
+                              onChange={this.onChangeSitterImage}
+                              />
+                  </div>
                   <div className="form-group">
                       <label>Name: </label>
                       <input  type="text"
@@ -89,7 +115,7 @@ export default class CreateList extends Component {
                               />
                   </div>
                   <div className="form-group">
-                      <input type="submit" value="Create Appointment" className="btn btn-primary" />
+                      <input type="submit" value="Create Sitter" className="btn btn-primary" />
                   </div>
               </form>
           </div>

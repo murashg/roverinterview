@@ -4,13 +4,13 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const dbRoutes = express.Router();
-const ownerRoutes = express.Router();
 const sitterRoutes = express.Router();
+const ownerRoutes = express.Router();
 const appointmentRoutes = express.Router();
 const PORT = 4000;
 
-let Owner = require('./models/owners.model');
 let Sitter = require('./models/sitters.model');
+let Owner = require('./models/owners.model');
 let Appointment = require('./models/appointments.model');
 let RoverDB = require('./models/db.model');
 
@@ -33,6 +33,17 @@ dbRoutes.route('/').get(function(req, res) {
   });
 });
 
+sitterRoutes.route('/add').post(function(req, res) {
+  let sitter = new Sitter(req.body);
+  sitter.save()
+        .then(sitter => {
+          res.status(200).json({'sitter': 'sitter added successfully'});
+        })
+        .catch(err => {
+          res.status(400).send('adding new sitter failed');
+        });
+});
+
 sitterRoutes.route('/').get(function(req, res) {
   Sitter.find(function(err, sitters) {
     if (err) {
@@ -45,13 +56,13 @@ sitterRoutes.route('/').get(function(req, res) {
 
 sitterRoutes.route('/:id').get(function(req, res) {
   let id = req.params.id;
-  Sitter.findById(id, function(err, sitter) {
+  Sitter.findOne({sitter_email:id}, function(err, sitter) {
     res.json(sitter);
   });
 });
 
 sitterRoutes.route('/update/:id').post(function(req, res) {
-  Sitter.findById(req.params.id, function(err, sitter) {
+  Sitter.findOne({sitter_email:id}, function(err, sitter) {
     if (!sitter) {
       res.status(404).send("data is not found");
     } else {
@@ -59,8 +70,9 @@ sitterRoutes.route('/update/:id').post(function(req, res) {
       sitter.sitter_phone_number = req.body.sitter_phone_number;
       sitter.sitter_name = req.body.sitter_name;
       sitter.sitter_score = req.body.sitter_score;
-      sitter.sitter_rank = req.body.sitter_rank;
-      sitter.sitter_overall_rank = req.body.sitter_overall_rank;
+      sitter.sitter_rating = req.body.sitter_rating;
+      sitter.sitter_overall_rating = req.body.sitter_overall_rating;
+      sitter.sitter_image = req.body.sitter_image;
 
       sitter.save().then(sitter => {
         res.json('Sitter updated!');
@@ -72,21 +84,10 @@ sitterRoutes.route('/update/:id').post(function(req, res) {
   });
 });
 
-sitterRoutes.route('/add').post(function(req, res) {
-  let sitter = new Sitter(req.body);
-  sitter.save()
-        .then(sitter => {
-          res.status(200).json({'sitter': 'sitter added successfully'});
-        })
-        .catch(err => {
-          res.status(400).send('adding new sitter failed');
-        });
-});
-
 app.use('/db', dbRoutes);
 app.use('/owners', ownerRoutes);
-app.use('/sitters', sitterRoutes);
 app.use('/appointments', appointmentRoutes);
+app.use('/sitters', sitterRoutes);
 
 app.listen(PORT, function() {
     console.log("Server is running on Port: " + PORT);

@@ -4,7 +4,11 @@ import axios from 'axios';
 
 const Sitter = props => (
   <tr>
+    <td><div class="img"><img src={props.sitter.sitter_image} alt="sitter" class="img-thumbnail"/></div></td>
     <td>{props.sitter.sitter_name}</td>
+    <td>{props.sitter.sitter_overall_rating_view}</td>
+    <td>{props.sitter.sitter_email}</td>
+    <td>{props.sitter.sitter_phone_number}</td>
     <td>
       <Link to={"/edit/"+props.sitter._id}>Edit</Link>
     </td>
@@ -36,13 +40,14 @@ export default class SitterList extends Component {
     render() {
         return (
             <div>
-                <h3>Sitter List</h3>
                 <table className="table table-striped" style={{ marginTop: 20}} >
                   <thead>
                     <tr>
+                      <th></th>
                       <th>Name</th>
                       <th>Rating</th>
-                      <th>Contact</th>
+                      <th>Email</th>
+                      <th>Phone Number</th>
                     </tr>
                   </thead>
                   <tbody>
