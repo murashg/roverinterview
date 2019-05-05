@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import SplashPage from "./components/splashpage.component";
 import SitterList from "./components/sitter-list.component";
+import OwnerList from "./components/owner-list.component";
+import AppointmentList from "./components/appointment-list.component";
 import CreateAppointment from "./components/create-appointment.component";
 import CreateSitter from "./components/create-sitter.component";
 import CreateOwner from "./components/create-owner.component";
@@ -23,7 +26,13 @@ class App extends Component {
             <div className="collpase navbar-collapse">
               <ul className="navbar-nav mr-auto">
                 <li className="navbar-item">
-                  <Link to="/" className="nav-link">Sitters</Link>
+                  <Link to="/sitters" className="nav-link">Sitters</Link>
+                </li>
+                <li className="navbar-item">
+                  <Link to="/owners" className="nav-link">Owners</Link>
+                </li>
+                <li className="navbar-item">
+                  <Link to="/appointments" className="nav-link">Appointments</Link>
                 </li>
                 <li className="navbar-item">
                   <Link to="/createappointment" className="nav-link">Create Appointment</Link>
@@ -39,7 +48,10 @@ class App extends Component {
           </nav>
           <br/>
 
-          <Route path="/" exact component={SitterList} />
+          <Route path="/" exact component={SplashPage} />
+          <Route path="/sitters" exact component={SitterList} />
+          <Route path="/owners" exact component={OwnerList} />
+          <Route path="/appointments" exact component={AppointmentList} />
           <Route path="/edit/:id" component={EditList} />
           <Route path="/createappointment" component={CreateAppointment} />
           <Route path="/createowner" component={CreateOwner} />

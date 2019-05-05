@@ -11,9 +11,7 @@ let OwnerSchema = new Schema({
         type: String
     },
     owner_dogs: [{
-      good_boy_or_girl: {
         type: String
-      }
     }],
     owner_pic: {
       type: String

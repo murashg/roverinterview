@@ -79,7 +79,7 @@ export default class CreateList extends Component {
           appointment_text: this.state.appointment_text
         };
 
-        axios.post('http://localhost:4000/createappointment/add', newAppointment)
+        axios.post('http://localhost:4000/appointments/add', newAppointment)
              .then(res => console.log(res.data));
 
         this.setState({

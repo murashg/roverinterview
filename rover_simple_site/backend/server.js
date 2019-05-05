@@ -33,6 +33,8 @@ dbRoutes.route('/').get(function(req, res) {
   });
 });
 
+//Sitter!
+
 sitterRoutes.route('/add').post(function(req, res) {
   let sitter = new Sitter(req.body);
   sitter.save()
@@ -82,6 +84,148 @@ sitterRoutes.route('/update/:id').post(function(req, res) {
       });
     }
   });
+});
+
+//validate unique email
+sitterRoutes.route('/add').post(function(req, res) {
+  let sitter = new Sitter(req.body);
+  sitter.save()
+        .then(sitter => {
+          res.status(200).json({'sitter': 'sitter added successfully'});
+        })
+        .catch(err => {
+          res.status(400).send('adding new sitter failed');
+        });
+});
+
+//owner!
+
+ownerRoutes.route('/').get(function(req, res) {
+  Owner.find(function(err, owners) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.json(owners);
+    }
+  });
+});
+
+ownerRoutes.route('/:id').get(function(req, res) {
+  let id = req.params.id;
+  Owner.findOne({owner_email:id}, function(err, owner) {
+    res.json(owner);
+  });
+});
+
+ownerRoutes.route('/update/:id').post(function(req, res) {
+  Owner.findOne({owner_email:id}, function(err, owner) {
+    if (!owner) {
+      res.status(404).send("data is not found");
+    } else {
+      owner.owner_email = req.body.owner_email;
+      owner.owner_phone_number = req.body.owner_phone_number;
+      owner.owner_name = req.body.owner_name;
+      owner.owner_dogs = req.body.owner_dogs;
+      owner.owner_pic = req.body.owner_pic;
+
+      owner.save().then(owner => {
+        res.json('Owner updated!');
+      })
+      .catch(err => {
+        res.status(400).send("Update not possible");
+      });
+    }
+  });
+});
+
+//validate unique email
+ownerRoutes.route('/add').post(function(req, res) {
+  let owner = new Owner(req.body);
+  owner.save()
+        .then(owner => {
+          res.status(200).json({'owner': 'owner added successfully'});
+        })
+        .catch(err => {
+          res.status(400).send('adding new owner failed');
+        });
+});
+
+//appointments!
+
+appointmentRoutes.route('/').get(function(req, res) {
+  Appointment.find(function(err, owners) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.json(owners);
+    }
+  });
+});
+
+appointmentRoutes.route('/:id').get(function(req, res) {
+  let id = req.params.id;
+  Owner.findOne({owner_email:id}, function(err, owner) {
+    res.json(owner);
+  });
+});
+
+appointmentRoutes.route('/update/:id').post(function(req, res) {
+  Owner.findOne({owner_email:id}, function(err, owner) {
+    if (!owner) {
+      res.status(404).send("data is not found");
+    } else {
+      owner.owner_email = req.body.owner_email;
+      owner.owner_phone_number = req.body.owner_phone_number;
+      owner.owner_name = req.body.owner_name;
+      owner.owner_dogs = req.body.owner_dogs;
+      owner.owner_pic = req.body.owner_pic;
+
+      owner.save().then(owner => {
+        res.json('Owner updated!');
+      })
+      .catch(err => {
+        res.status(400).send("Update not possible");
+      });
+    }
+  });
+});
+
+//validate unique email
+appointmentRoutes.route('/add').post(function(req, res) {
+  let sFlag = false;
+  let oFlag = false;
+  Sitter.findOne({sitter_email:req.body.appointment_sitter}, function(err, sitter) {
+    if (!sitter){
+      res.status(404).send("sitter is not found");
+    } else {
+      req.body.appointment_sitter = sitter._id;
+      sflag = true;
+    }
+  });
+  let owner = Owner.findOne({owner_email:req.body.appointment_owner}, function(err, owner) {
+    if (!owner){
+      res.status(404).send("owner is not found");
+    } else {
+      req.body.appointment_owner = owner._id;
+      oflag = true;
+    }
+  });
+
+  console.log(req.body.appointment_sitter);
+  console.log(req.body.appointment_owner);
+
+  if (oFlag && sFlag){
+    let appointment = new Appointment(req.body);
+    appointment.save()
+          .then(owner => {
+            res.status(200).json({'appointment': 'appointment added successfully'});
+          })
+          .catch(err => {
+            res.status(400).send('adding new appointment failed');
+          });
+  } else {
+    res.status(404).send("Appointment not created");
+  }
 });
 
 app.use('/db', dbRoutes);

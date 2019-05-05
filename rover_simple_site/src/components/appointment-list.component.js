@@ -15,7 +15,7 @@ const Sitter = props => (
   </tr>
 )
 
-export default class SitterList extends Component {
+export default class AppointmentList extends Component {
     constructor(props) {
       super(props);
       this.state = {sitters: []};
@@ -40,7 +40,7 @@ export default class SitterList extends Component {
     render() {
         return (
             <div>
-              <h3>Sitters!</h3>
+              <h3>Appointments!</h3>
                 <table className="table table-striped" style={{ marginTop: 20}} >
                   <thead>
                     <tr>

@@ -58,18 +58,18 @@ export default class CreateList extends Component {
         console.log(`Owner Name: ${this.state.owner_name}`);
         console.log(`Owner Email: ${this.state.owner_email}`);
         console.log(`Owner PhoneNumber: ${this.state.owner_phone_number}`);
-        console.log(`Owner Dogs: ${this.state.owner_dogs}`);
+        console.log(`Owner Dogs: ${this.state.owner_dogs.split("|")}`);
         console.log(`Owner Pic: ${this.state.owner_pic}`);
 
         const newowner = {
           owner_name: this.state.owner_name,
           owner_email: this.state.owner_email,
           owner_phone_number: this.state.owner_phone_number,
-          owner_dogs: this.state.owner_dogs,
+          owner_dogs: this.state.owner_dogs.split("|"),
           owner_pic: this.state.owner_pic,
         };
 
-        axios.post('http://localhost:4000/createowner/add', newowner)
+        axios.post('http://localhost:4000/owners/add', newowner)
              .then(res => console.log(res.data));
 
         this.setState({
