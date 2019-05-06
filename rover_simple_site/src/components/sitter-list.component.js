@@ -7,10 +7,8 @@ const Sitter = props => (
     <td><div class="img"><img src={props.sitter.sitter_image} alt="sitter" class="img-thumbnail"/></div></td>
     <td>{props.sitter.sitter_name}</td>
     <td>{props.sitter.sitter_rating_rounded}</td>
-    <td>{props.sitter.sitter_email}</td>
-    <td>{props.sitter.sitter_phone_number}</td>
     <td>
-      <Link to={"/edit/"+props.sitter._id}>Edit</Link>
+      <Link to={"/sitters/"+props.sitter._id}>View</Link>
     </td>
   </tr>
 )
@@ -47,8 +45,6 @@ export default class SitterList extends Component {
                       <th></th>
                       <th>Name</th>
                       <th>Rating</th>
-                      <th>Email</th>
-                      <th>Phone Number</th>
                     </tr>
                   </thead>
                   <tbody>

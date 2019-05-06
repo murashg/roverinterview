@@ -23,17 +23,19 @@ connection.once('open', function() {
     console.log("MongoDB database connection established successfully");
 })
 
-dbRoutes.route('/').get(function(req, res) {
-  RoverDB.find(function(err, db) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.json(db);
-    }
-  });
-});
+handleGetRequest(dbRoutes, RoverDB);
+handleGetRequest(sitterRoutes, Sitter);
+handleGetRequest(ownerRoutes, Owner);
+handleGetRequest(appointmentRoutes, Appointment);
 
-dbRoutes.route('/initialize').get(function(req, res) {
+handleGetIdRequest(sitterRoutes, Sitter);
+handleGetIdRequest(ownerRoutes, Owner);
+handleGetIdRequest(appointmentRoutes, Appointment);
+
+handleAddRequest(sitterRoutes, Sitter, 'sitter', 'db_sitters');
+handleAddRequest(ownerRoutes, Owner, 'owner', 'db_owners');
+
+dbRoutes.route('/initialize').post(function(req, res) {
   let db = new RoverDB();
   db.save()
     .then(db => {
@@ -42,36 +44,6 @@ dbRoutes.route('/initialize').get(function(req, res) {
     .catch(err => {
       res.status(400).send('db initialization failed');
     });
-});
-
-//Sitter!
-
-sitterRoutes.route('/add').post(function(req, res) {
-  let sitter = new Sitter(req.body);
-  sitter.save()
-        .then(sitter => {
-          res.status(200).json({'sitter': 'sitter added successfully'});
-        })
-        .catch(err => {
-          res.status(400).send('adding new sitter failed');
-        });
-});
-
-sitterRoutes.route('/').get(function(req, res) {
-  Sitter.find(function(err, sitters) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.json(sitters);
-    }
-  });
-});
-
-sitterRoutes.route('/:id').get(function(req, res) {
-  let id = req.params.id;
-  Sitter.findOne({sitter_email:id}, function(err, sitter) {
-    res.json(sitter);
-  });
 });
 
 sitterRoutes.route('/update/:id').post(function(req, res) {
@@ -97,51 +69,6 @@ sitterRoutes.route('/update/:id').post(function(req, res) {
   });
 });
 
-//validate unique email
-sitterRoutes.route('/add').post(function(req, res) {
-  let sitter = new Sitter(req.body);
-  sitter.save()
-        .then(sitter => {
-          res.status(200).json({'sitter': 'sitter added successfully'});
-          RoverDB.find(function(err, db) {
-            if (err) {
-              console.log(err);
-            } else {
-              db.db_sitters.push(sitter._id);
-              db.save()
-                    .then(db => {
-                      res.status(200).json({'db': 'db updated'});
-                    })
-                    .catch(err => {
-                      res.status(400).send('updating db failed');
-                    });
-            }
-          });
-        })
-        .catch(err => {
-          res.status(400).send('adding new sitter failed');
-        });
-});
-
-//owner!
-
-ownerRoutes.route('/').get(function(req, res) {
-  Owner.find(function(err, owners) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.json(owners);
-    }
-  });
-});
-
-ownerRoutes.route('/:id').get(function(req, res) {
-  let id = req.params.id;
-  Owner.findOne({owner_email:id}, function(err, owner) {
-    res.json(owner);
-  });
-});
-
 ownerRoutes.route('/update/:id').post(function(req, res) {
   Owner.findOne({owner_email:id}, function(err, owner) {
     if (!owner) {
@@ -160,51 +87,6 @@ ownerRoutes.route('/update/:id').post(function(req, res) {
         res.status(400).send("Update not possible");
       });
     }
-  });
-});
-
-//validate unique email
-ownerRoutes.route('/add').post(function(req, res) {
-  let owner = new Owner(req.body);
-  owner.save()
-        .then(owner => {
-          res.status(200).json({'owner': 'owner added successfully'});
-          RoverDB.find(function(err, db) {
-            if (err) {
-              console.log(err);
-            } else {
-              db.db_owners.push(owner._id);
-              db.save()
-                    .then(db => {
-                      res.status(200).json({'db': 'db updated'});
-                    })
-                    .catch(err => {
-                      res.status(400).send('updating db failed');
-                    });
-            }
-          });
-        })
-        .catch(err => {
-          res.status(400).send('adding new owner failed');
-        });
-});
-
-//appointments!
-
-appointmentRoutes.route('/').get(function(req, res) {
-  Appointment.find(function(err, owners) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.json(owners);
-    }
-  });
-});
-
-appointmentRoutes.route('/:id').get(function(req, res) {
-  let id = req.params.id;
-  Owner.findOne({owner_email:id}, function(err, owner) {
-    res.json(owner);
   });
 });
 
@@ -229,7 +111,7 @@ appointmentRoutes.route('/update/:id').post(function(req, res) {
   });
 });
 
-//validate unique email
+//custom add for appointments because it updates other schema
 appointmentRoutes.route('/add').post(function(req, res) {
   let sFlag = false;
   Sitter.findOne({sitter_email:req.body.appointment_sitter}, function(err, sitter) {
@@ -266,20 +148,7 @@ appointmentRoutes.route('/add').post(function(req, res) {
                           .catch(err => {
                             res.status(400).send('updating owner history failed');
                           });
-                    RoverDB.find(function(err, db) {
-                      if (err) {
-                        console.log(err);
-                      } else {
-                        db.db_appointments.push(appointment._id);
-                        db.save()
-                              .then(db => {
-                                res.status(200).json({'db': 'db updated'});
-                              })
-                              .catch(err => {
-                                res.status(400).send('updating db failed');
-                              });
-                      }
-                    });
+                    pushToRoverDB(appointment,'db_appointments');
                   })
                   .catch(err => {
                     res.status(400).send('adding new appointment failed');
@@ -301,3 +170,56 @@ app.use('/sitters', sitterRoutes);
 app.listen(PORT, function() {
     console.log("Server is running on Port: " + PORT);
 });
+
+
+function handleGetRequest(route, schema){
+  route.route('/').get(function(req, res) {
+    schema.find(function(err, model) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.json(model);
+      }
+    });
+  });
+};
+
+function handleGetIdRequest(route, schema){
+  route.route('/:id').get(function(req, res) {
+    let id = req.params.id;
+    schema.findOne({_id:id}, function(err, model) {
+      res.json(model);
+    });
+  });
+};
+
+function handleAddRequest(route, schema, name, accessor){
+  route.route('/add').post(function(req, res) {
+    let model = new schema(req.body);
+    model.save()
+          .then(model => {
+            res.status(200).json({name: name+' added successfully'});
+            pushToRoverDB(model, accessor);
+          })
+          .catch(err => {
+            res.status(400).send('adding '+name+' sitter failed');
+          });
+  });
+};
+
+function pushToRoverDB(model,accessor){
+  RoverDB.findById("5ccf9d7e4a5ed243c832b65d", function(err, db) {
+    if (err) {
+      console.log(err);
+    } else {
+      db[accessor].push(model._id);
+      db.save()
+        .then(db => {
+          res.status(200).json({'db': 'db updated'});
+        })
+        .catch(err => {
+          res.status(400).send('updating db failed');
+        });
+    }
+  });
+};
