@@ -54,14 +54,7 @@ export default class CreateList extends Component {
     onSubmit(e) {
         e.preventDefault();
 
-        console.log(`Form submitted:`);
-        console.log(`Owner Name: ${this.state.owner_name}`);
-        console.log(`Owner Email: ${this.state.owner_email}`);
-        console.log(`Owner PhoneNumber: ${this.state.owner_phone_number}`);
-        console.log(`Owner Dogs: ${this.state.owner_dogs.split("|")}`);
-        console.log(`Owner Pic: ${this.state.owner_pic}`);
-
-        const newowner = {
+        const newOwner = {
           owner_name: this.state.owner_name,
           owner_email: this.state.owner_email,
           owner_phone_number: this.state.owner_phone_number,
@@ -69,7 +62,9 @@ export default class CreateList extends Component {
           owner_pic: this.state.owner_pic,
         };
 
-        axios.post('http://localhost:4000/owners/add', newowner)
+        console.log(newOwner);
+
+        axios.post('http://localhost:4000/owners/add', newOwner)
              .then(res => console.log(res.data));
 
         this.setState({

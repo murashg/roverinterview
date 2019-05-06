@@ -13,7 +13,7 @@ let SitterSchema = new Schema({
     sitter_overall_rating: {
         type: Number
     },
-    sitter_overall_rating_view: {
+    sitter_rating_rounded: {
         type: Number
     },
     sitter_rating: {
@@ -43,7 +43,7 @@ SitterSchema.pre("save", function(next) {
     } else {
       this.sitter_overall_rating = (this.sitter_score * ((10 - this.sitter_stays) / 10)) + (this.sitter_rating * (this.sitter_stays / 10));
     }
-    this.sitter_overall_rating_view = this.sitter_overall_rating.toFixed(1)
+    this.sitter_rating_rounded = this.sitter_rating.toFixed(2)
     next();
 });
 

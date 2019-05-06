@@ -62,14 +62,6 @@ export default class CreateList extends Component {
     onSubmit(e) {
         e.preventDefault();
 
-        console.log(`Form submitted:`);
-        console.log(`Appointment Sitter: ${this.state.appointment_sitter}`);
-        console.log(`Appointment Owner: ${this.state.appointment_owner}`);
-        console.log(`Appointment Rating: ${this.state.appointment_rating}`);
-        console.log(`Appointment Start Date: ${this.state.appointment_rating}`);
-        console.log(`Appointment End Date: ${this.state.appointment_rating}`);
-        console.log(`Appointment Text: ${this.state.appointment_rating}`);
-
         const newAppointment = {
           appointment_sitter: this.state.appointment_sitter,
           appointment_owner: this.state.appointment_owner,
@@ -78,6 +70,8 @@ export default class CreateList extends Component {
           appointment_rating: this.state.appointment_rating,
           appointment_text: this.state.appointment_text
         };
+
+        console.log(newAppointment);
 
         axios.post('http://localhost:4000/appointments/add', newAppointment)
              .then(res => console.log(res.data));
