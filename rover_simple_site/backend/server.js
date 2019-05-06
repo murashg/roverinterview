@@ -49,7 +49,7 @@ sitterRoutes.route('/').get(function(req, res) {
   Sitter.find({
     // Search Filters
   },
-  ['sitter_image','sitter_name','sitter_rating_rounded'], // Columns to Return
+  ['sitter_image','sitter_name','sitter_rating_rounded', 'sitter_email', 'sitter_phone_number'], // Columns to Return
   {
     skip:0, // Starting Row
     limit:10, // Ending Row

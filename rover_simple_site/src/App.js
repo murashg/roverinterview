@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import 'typeface-roboto';
+import classNames from 'classnames';
 
 import SplashPage from "./components/splashpage.component";
 import SitterList from "./components/sitter-list.component";
@@ -19,7 +21,7 @@ class App extends Component {
       <Router>
         <div className="container">
           <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="https://Rover.com" target="_blank">
+            <a className="navbar-brand" href="https://Rover.com" target="_blank">
               <img src={logo} width="30" height="30" alt="Rover.com" />
             </a>
             <Link to="/" className="navbar-brand">Rover Simple App</Link>

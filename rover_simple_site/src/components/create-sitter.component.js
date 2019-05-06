@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import Button from '@material-ui/core/Button';
 
 export default class CreateList extends Component {
   constructor(props) {
@@ -115,10 +116,12 @@ export default class CreateList extends Component {
                               />
                   </div>
                   <div className="form-group">
-                      <input type="submit" value="Create Sitter" className="btn btn-primary" />
+                    <Button variant="contained" color='primary' type="submit">
+                      Create Sitter
+                    </Button>
                   </div>
               </form>
           </div>
-        )
+        );
     }
 }

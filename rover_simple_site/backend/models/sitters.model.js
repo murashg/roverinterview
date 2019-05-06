@@ -36,6 +36,8 @@ let SitterSchema = new Schema({
     }]
 });
 
+SitterSchema.index({sitter_overall_rating: -1})
+
 SitterSchema.pre("save", function(next) {
   console.log("im in pre save");
     if (this.sitter_stays >= 10) {
