@@ -7,7 +7,7 @@ let RoverDbSchema = new Schema({
         ref: 'Owner'
       }
     }],
-    sitters: [{
+    db_sitters: [{
       db_sitter: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Sitter'
