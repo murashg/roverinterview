@@ -1,17 +1,23 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 let RoverDbSchema = new Schema({
-    owners: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Owner'
+    db_owners: [{
+      db_owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Owner'
+      }
     }],
     sitters: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Sitter'
+      db_sitter: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Sitter'
+      }
     }],
-    appointments: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Appointment'
+    db_appointments: [{
+      db_appointment: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Appointment'
+      }
     }]
 });
 module.exports = mongoose.model('RoverDB', RoverDbSchema);

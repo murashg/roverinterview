@@ -33,6 +33,17 @@ dbRoutes.route('/').get(function(req, res) {
   });
 });
 
+dbRoutes.route('/initialize').get(function(req, res) {
+  let db = new RoverDB();
+  db.save()
+    .then(db => {
+      res.status(200).json({'db': 'db initialized'});
+    })
+    .catch(err => {
+      res.status(400).send('db initialization failed');
+    });
+});
+
 //Sitter!
 
 sitterRoutes.route('/add').post(function(req, res) {
@@ -92,6 +103,20 @@ sitterRoutes.route('/add').post(function(req, res) {
   sitter.save()
         .then(sitter => {
           res.status(200).json({'sitter': 'sitter added successfully'});
+          RoverDB.find(function(err, db) {
+            if (err) {
+              console.log(err);
+            } else {
+              db.db_sitters.push(sitter._id);
+              db.save()
+                    .then(db => {
+                      res.status(200).json({'db': 'db updated'});
+                    })
+                    .catch(err => {
+                      res.status(400).send('updating db failed');
+                    });
+            }
+          });
         })
         .catch(err => {
           res.status(400).send('adding new sitter failed');
@@ -144,6 +169,20 @@ ownerRoutes.route('/add').post(function(req, res) {
   owner.save()
         .then(owner => {
           res.status(200).json({'owner': 'owner added successfully'});
+          RoverDB.find(function(err, db) {
+            if (err) {
+              console.log(err);
+            } else {
+              db.db_owners.push(owner._id);
+              db.save()
+                    .then(db => {
+                      res.status(200).json({'db': 'db updated'});
+                    })
+                    .catch(err => {
+                      res.status(400).send('updating db failed');
+                    });
+            }
+          });
         })
         .catch(err => {
           res.status(400).send('adding new owner failed');
@@ -227,7 +266,20 @@ appointmentRoutes.route('/add').post(function(req, res) {
                           .catch(err => {
                             res.status(400).send('updating owner history failed');
                           });
-
+                    RoverDB.find(function(err, db) {
+                      if (err) {
+                        console.log(err);
+                      } else {
+                        db.db_appointments.push(appointment._id);
+                        db.save()
+                              .then(db => {
+                                res.status(200).json({'db': 'db updated'});
+                              })
+                              .catch(err => {
+                                res.status(400).send('updating db failed');
+                              });
+                      }
+                    });
                   })
                   .catch(err => {
                     res.status(400).send('adding new appointment failed');
@@ -239,32 +291,6 @@ appointmentRoutes.route('/add').post(function(req, res) {
       });
     }
   });
-  /*
-  Owner.findOne({owner_email:req.body.appointment_owner}, function(err, owner) {
-    if (!owner){
-      //res.status(400).send("owner is not found");
-    } else {
-      req.body.appointment_owner = owner._id;
-
-    }
-  });
-  console.log(req.body);
-  console.log(oFlag);
-  console.log(sFlag);
-
-  if (oFlag && sFlag){
-    let appointment = new Appointment(req.body);
-    appointment.save()
-          .then(owner => {
-            res.status(200).json({'appointment': 'appointment added successfully'});
-          })
-          .catch(err => {
-            res.status(400).send('adding new appointment failed');
-          });
-  } else {
-    res.status(404).send("Appointment not created");
-  }
-  */
 });
 
 app.use('/db', dbRoutes);
