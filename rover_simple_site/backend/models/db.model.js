@@ -11,6 +11,9 @@ let RoverDbSchema = new Schema({
       db_sitter: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Sitter'
+      },
+      db_sitter_rating: {
+        type: Number
       }
     }],
     db_appointments: [{

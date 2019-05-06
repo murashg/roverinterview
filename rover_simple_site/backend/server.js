@@ -24,7 +24,6 @@ connection.once('open', function() {
 })
 
 handleGetRequest(dbRoutes, RoverDB);
-handleGetRequest(sitterRoutes, Sitter);
 handleGetRequest(ownerRoutes, Owner);
 handleGetRequest(appointmentRoutes, Appointment);
 
@@ -44,6 +43,27 @@ dbRoutes.route('/initialize').post(function(req, res) {
     .catch(err => {
       res.status(400).send('db initialization failed');
     });
+});
+
+sitterRoutes.route('/').get(function(req, res) {
+  Sitter.find({
+    // Search Filters
+  },
+  ['sitter_image','sitter_name','sitter_rating_rounded'], // Columns to Return
+  {
+    skip:0, // Starting Row
+    limit:10, // Ending Row
+    sort:{
+        sitter_overall_rating: -1 //Sort by Date Added DESC
+    }
+  },
+  function(err, model) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.json(model);
+    }
+  });
 });
 
 sitterRoutes.route('/update/:id').post(function(req, res) {
@@ -208,7 +228,7 @@ function handleAddRequest(route, schema, name, accessor){
 };
 
 function pushToRoverDB(model,accessor){
-  RoverDB.findById("5ccf9d7e4a5ed243c832b65d", function(err, db) {
+  RoverDB.findById("5cd065b0004c754dc88e86ba", function(err, db) {
     if (err) {
       console.log(err);
     } else {
