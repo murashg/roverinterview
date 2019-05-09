@@ -1,3 +1,24 @@
+## Ideas
+Would be best if owner and sitter interact through website.  Not sure if displaying phone or email are good ideas.
+Sitter list should have slider to choose how many to search, and should load 10 at a time.
+I like the idea of swipeable tabs for ui with a changing button.
+Create appointment could be a form dialog.
+Mobile first.
+sitter collection is indexed on overall rating.
+Sitter query should
+
+##Site UX flow
+Owner logs in.  Then can look at past appointments or choose to look at sitters or schedule new appointment
+From sitter list owner can look at image, name, and rating of top sitters, upon clicking will bring up text of sitter. can then create appointment with sitter.
+
+
+##Todo
+Core Functionality ~70%
+TESTING ~0%
+UI/UX thought ~50%
+Abstracting ~25%
+Optimization ~60%
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

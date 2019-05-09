@@ -13,7 +13,10 @@ let OwnerSchema = new Schema({
     owner_dogs: [{
         type: String
     }],
-    owner_pic: {
+    owner_image: {
+      type: String
+    },
+    owner_bio: {
       type: String
     },
     owner_history: [{

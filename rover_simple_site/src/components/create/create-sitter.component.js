@@ -10,13 +10,15 @@ export default class CreateList extends Component {
         this.onChangeSitterEmail = this.onChangeSitterEmail.bind(this);
         this.onChangeSitterPhoneNumber = this.onChangeSitterPhoneNumber.bind(this);
         this.onChangeSitterImage = this.onChangeSitterImage.bind(this);
+        this.onChangeSitterBio = this.onChangeSitterBio.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
         this.state = {
             sitter_name: '',
             sitter_email: '',
             sitter_phone_number: '',
-            sitter_image: ''
+            sitter_image: '',
+            sitter_bio: '',
         }
     }
 
@@ -44,6 +46,12 @@ export default class CreateList extends Component {
         });
     }
 
+    onChangeSitterBio(e) {
+        this.setState({
+            sitter_bio: e.target.value
+        });
+    }
+
     calcSitterScore(s) {
       let set = new Set();
       for (var i = 0; i < s.length; i++){
@@ -62,7 +70,8 @@ export default class CreateList extends Component {
           sitter_stays: 0,
           sitter_rating: 0,
           sitter_score: this.calcSitterScore(this.state.sitter_name),
-          sitter_image: this.state.sitter_image
+          sitter_image: this.state.sitter_image,
+          sitter_bio: this.state.sitter_bio,
         };
 
         console.log(newSitter);
@@ -74,7 +83,8 @@ export default class CreateList extends Component {
           sitter_name: '',
           sitter_email: '',
           sitter_phone_number: '',
-          sitter_image: ''
+          sitter_image: '',
+          sitter_bio: ''
         })
     }
 
@@ -113,6 +123,14 @@ export default class CreateList extends Component {
                               className="form-control"
                               value={this.state.sitter_phone_number}
                               onChange={this.onChangeSitterPhoneNumber}
+                              />
+                  </div>
+                  <div className="form-group">
+                      <label>Bio: </label>
+                      <input  type="text"
+                              className="form-control"
+                              value={this.state.sitter_bio}
+                              onChange={this.onChangeSitterBio}
                               />
                   </div>
                   <div className="form-group">

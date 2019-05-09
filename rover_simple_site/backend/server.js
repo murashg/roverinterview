@@ -49,7 +49,7 @@ sitterRoutes.route('/').get(function(req, res) {
   Sitter.find({
     // Search Filters
   },
-  ['sitter_image','sitter_name','sitter_rating_rounded', 'sitter_email', 'sitter_phone_number'], // Columns to Return
+  ['sitter_image','sitter_name','sitter_rating_rounded', 'sitter_email', 'sitter_phone_number', 'sitter_bio'], // Columns to Return
   {
     skip:0, // Starting Row
     limit:10, // Ending Row
@@ -78,6 +78,7 @@ sitterRoutes.route('/update/:id').post(function(req, res) {
       sitter.sitter_rating = req.body.sitter_rating;
       sitter.sitter_overall_rating = req.body.sitter_overall_rating;
       sitter.sitter_image = req.body.sitter_image;
+      sitter.sitter_bio = req.body.sitter_bio;
 
       sitter.save().then(sitter => {
         res.json('Sitter updated!');
@@ -85,6 +86,16 @@ sitterRoutes.route('/update/:id').post(function(req, res) {
       .catch(err => {
         res.status(400).send("Update not possible");
       });
+    }
+  });
+});
+
+ownerRoutes.route('/email/:email').get(function(req, res) {
+  Owner.findOne({owner_email:req.params.email}, function(err, owner) {
+    if (!owner) {
+      res.status(404).send("data is not found");
+    } else {
+      res.json(owner);
     }
   });
 });
@@ -99,6 +110,7 @@ ownerRoutes.route('/update/:id').post(function(req, res) {
       owner.owner_name = req.body.owner_name;
       owner.owner_dogs = req.body.owner_dogs;
       owner.owner_pic = req.body.owner_pic;
+      owner.owner_bio = req.body.owner_bio;
 
       owner.save().then(owner => {
         res.json('Owner updated!');

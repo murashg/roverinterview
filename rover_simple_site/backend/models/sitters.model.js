@@ -28,6 +28,9 @@ let SitterSchema = new Schema({
     sitter_stays: {
         type: Number
     },
+    sitter_bio: {
+      type: String
+    },
     sitter_history: [{
         appointment_history: {
           type: mongoose.Schema.Types.ObjectId,
