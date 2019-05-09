@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -12,7 +10,42 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
-import Paper from '@material-ui/core/Paper';
+import StepSlider from './step-slider';
+
+const styles = theme => ({
+  root: {
+    width: '100%',
+  },
+  heading: {
+    fontSize: theme.typography.pxToRem(15),
+  },
+  secondaryHeading: {
+    fontSize: theme.typography.pxToRem(15),
+    color: theme.palette.text.secondary,
+  },
+  icon: {
+    verticalAlign: 'bottom',
+    height: 20,
+    width: 20,
+  },
+  details: {
+    alignItems: 'center',
+  },
+  column: {
+    flexBasis: '33.33%',
+  },
+  helper: {
+    borderLeft: `2px solid ${theme.palette.divider}`,
+    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
+  },
+  link: {
+    color: theme.palette.primary.main,
+    textDecoration: 'none',
+    '&:hover': {
+      textDecoration: 'underline',
+    },
+  },
+});
 
 /*
 <td><div class="img"><img src={props.sitter.sitter_image} alt="sitter" class="img-thumbnail"/></div></td>
@@ -28,7 +61,7 @@ const Sitter = props => (
         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
           <div className={props.column}>
             <Typography>
-                <img src={props.sitter.sitter_image} alt="sitter" class="img-thumbnail"/>
+                <img src={props.sitter.sitter_image} alt="sitter" className="img-thumbnail"/>
             </Typography>
           </div>
           <div className={props.column}>
@@ -59,18 +92,23 @@ const Sitter = props => (
             </Typography>
           </div>
         </ExpansionPanelDetails>
-        <Divider />
-        <ExpansionPanelActions>
-          <Button size="small" color="primary">
-            <Link to="/createappointment" className="nav-link">Create Appointment</Link>
-          </Button>
-        </ExpansionPanelActions>
+        {props.auth && (
+          <div>
+            <Divider />
+            <ExpansionPanelActions>
+              <Button size="small" color="primary">
+                <Link to="/createappointment" className="nav-link">Create Appointment</Link>
+              </Button>
+            </ExpansionPanelActions>
+          </div>
+        )}
       </ExpansionPanel>
 )
 
-export default class SitterList extends Component {
+export default withStyles(styles)(class SitterList extends Component {
     constructor(props) {
       super(props);
+      console.log(this.props);
       this.state = {sitters: []};
     }
 
@@ -84,23 +122,24 @@ export default class SitterList extends Component {
           })
     }
 
-    sittersList() {
+    sittersList(props) {
       return this.state.sitters.map(function(currentSitter, i) {
-        return <Sitter sitter={currentSitter} key={i} />;
+        return <Sitter auth={props.auth} sitter={currentSitter} key={i} />;
       })
     }
 
     render() {
-        console.log(this.props.column);
+        console.log(this.props);
         return (
             <div>
               <h3>Sitters!</h3>
-
-              { this.sittersList() }
+              
+              { this.sittersList(this.props) }
             </div>
         )
     }
-}
+})
+/*
 function DetailedExpansionPanel(props) {
   const { classes } = props;
   return (
@@ -137,3 +176,4 @@ function DetailedExpansionPanel(props) {
     </div>
   );
 }
+*/

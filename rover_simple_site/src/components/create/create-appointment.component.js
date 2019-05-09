@@ -4,7 +4,7 @@ import axios from 'axios';
 export default class CreateList extends Component {
   constructor(props) {
         super(props);
-
+        console.log(props);
         this.onChangeAppointmentSitter = this.onChangeAppointmentSitter.bind(this);
         this.onChangeAppointmentOwner = this.onChangeAppointmentOwner.bind(this);
         this.onChangeAppointmentStartDate = this.onChangeAppointmentStartDate.bind(this);
@@ -14,8 +14,8 @@ export default class CreateList extends Component {
         this.onSubmit = this.onSubmit.bind(this);
 
         this.state = {
-            appointment_sitter: '',
-            appointment_owner: '',
+            appointment_sitter: this.props.sitter_email,
+            appointment_owner: this.props.owner_email,
             appointment_startDate: '',
             appointment_endDate: '',
             appointment_rating: 5.0,

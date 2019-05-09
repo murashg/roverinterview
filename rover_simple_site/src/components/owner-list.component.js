@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const Sitter = props => (
   <tr>
-    <td><div class="img"><img src={props.sitter.sitter_image} alt="sitter" class="img-thumbnail"/></div></td>
+    <td><div className="img img-thumbnail"><img src={props.sitter.sitter_image} alt="sitter"/></div></td>
     <td>{props.sitter.sitter_name}</td>
     <td>{props.sitter.sitter_overall_rating_view}</td>
     <td>{props.sitter.sitter_email}</td>
