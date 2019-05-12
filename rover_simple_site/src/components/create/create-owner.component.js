@@ -93,7 +93,7 @@ export default class CreateOwner extends Component {
                 this.props.setOwner(res.data);
                }
              });
-
+             
         this.setState({
           open: false,
         })

@@ -6,19 +6,18 @@ import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MenuIcon from '@material-ui/icons/Menu';
 import CreateOwner from './create/create-owner.component';
+import SearchBar from './search-bar.component';
 
 const styles = {
   list: {
     width: 250,
   },
-  fullList: {
-    width: 'auto',
-  },
+  listItem: {
+    'text-align': 'center',
+  }
 };
 
 class SwipeableTemporaryDrawer extends React.Component {
@@ -35,53 +34,63 @@ class SwipeableTemporaryDrawer extends React.Component {
   render() {
     const { classes } = this.props;
 
-    const sideList = (
+    const sideListAlways = (
       <div className={classes.list}>
         <List>
-            <ListItem button key='Sitters'>
-              <ListItemIcon><InboxIcon /></ListItemIcon>
+          <SearchBar />
+          <Link to='/sitters'>
+            <ListItem button key='Sitters' className={classes.listItem}>
               <ListItemText>
-                <Link to='/sitters'>Sitters</Link>
+                Sitters
               </ListItemText>
             </ListItem>
-            <ListItem button key='Owners'>
-              <ListItemIcon><InboxIcon /></ListItemIcon>
+          </Link>
+          <Link to='/owners'>
+            <ListItem button key='Owners'  className={classes.listItem}>
               <ListItemText>
-                <Link to='/owners'>Owners</Link>
+                Owners
               </ListItemText>
             </ListItem>
-            <ListItem button key='Appointments'>
-              <ListItemIcon><InboxIcon /></ListItemIcon>
+          </Link>
+          <Link to='/appointments'>
+            <ListItem button key='Appointments'  className={classes.listItem}>
               <ListItemText>
-                <Link to='/appointments'>Appointments</Link>
+                Appointments
               </ListItemText>
             </ListItem>
+          </Link>
         </List>
         <Divider />
-        {this.props.auth && (
-          <List>
-              <ListItem button key='Sitters'>
-                <ListItemIcon><InboxIcon /></ListItemIcon>
-                <ListItemText>
-                  <Link to='/sitters'>Sitters</Link>
-                </ListItemText>
-              </ListItem>
-              <ListItem button key='Owners'>
-                <ListItemIcon><InboxIcon /></ListItemIcon>
-                <ListItemText>
-                  <CreateOwner name="Create Owner" setOwner={(event)=>this.props.setOwner(event)} shouldSetOwner={false}/>
-                </ListItemText>
-              </ListItem>
-              <ListItem button key='Appointments'>
-                <ListItemIcon><InboxIcon /></ListItemIcon>
-                <ListItemText>
-                  <Link to='/appointments'>Appointments</Link>
-                </ListItemText>
-              </ListItem>
-          </List>
-        )}
       </div>
     );
+
+  const sideListOnAuth = (
+    <div className={classes.list}>
+      {this.props.auth && (
+        <List>
+          <Link to='/createsitter'>
+            <ListItem button key='Sitters' className={classes.listItem}>
+              <ListItemText>
+                Create Sitter
+              </ListItemText>
+            </ListItem>
+          </Link>
+          <ListItem button key='Owners' className={classes.listItem}>
+            <ListItemText>
+              <CreateOwner name="Create Owner" submitted={(event)=>this.toggleDrawer('left',false)} setOwner={(event)=>this.props.setOwner(event)} shouldSetOwner={false}/>
+            </ListItemText>
+          </ListItem>
+          <Link to='/createappointment'>
+            <ListItem button key='Appointments' className={classes.listItem}>
+              <ListItemText>
+                Create Appointment
+              </ListItemText>
+            </ListItem>
+          </Link>
+        </List>
+      )}
+    </div>
+  )
 
     return (
       <div>
@@ -97,7 +106,10 @@ class SwipeableTemporaryDrawer extends React.Component {
             onClick={this.toggleDrawer('left', false)}
             onKeyDown={this.toggleDrawer('left', false)}
           >
-            {sideList}
+            {sideListAlways}
+          </div>
+          <div>
+            {sideListOnAuth}
           </div>
         </SwipeableDrawer>
       </div>

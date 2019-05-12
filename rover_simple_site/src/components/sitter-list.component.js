@@ -11,6 +11,8 @@ import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
 import StepSlider from './step-slider';
+import Paper from '@material-ui/core/Paper';
+import Sitter from './sitter.component';
 
 const styles = theme => ({
   root: {
@@ -45,6 +47,9 @@ const styles = theme => ({
       textDecoration: 'underline',
     },
   },
+  paper: {
+    width: '90%'
+  },
 });
 
 /*
@@ -55,38 +60,38 @@ const styles = theme => ({
   <Link to={"/sitters/"+props.sitter._id}>View</Link>
 </td>
 */
-
+/*
 const Sitter = props => (
-      <ExpansionPanel>
+      <ExpansionPanel className={classes.column}>
         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-          <div className={props.column}>
+          <div>
             <Typography>
                 <img src={props.sitter.sitter_image} alt="sitter" className="img-thumbnail"/>
             </Typography>
           </div>
-          <div className={props.column}>
-            <Typography className={props.heading}>
+          <div>
+            <Typography>
                 {props.sitter.sitter_name}
             </Typography>
           </div>
-          <div className={props.column}>
-            <Typography className={props.secondaryHeading}>
+          <div>
+            <Typography>
                 {props.sitter.sitter_rating_rounded}
             </Typography>
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          <div className={props.column}>
-            <Typography className={props.Link}>
+          <div>
+            <Typography>
                 {props.sitter.sitter_email}
             </Typography>
           </div>
-          <div className={props.column}>
-            <Typography className={props.secondaryHeading}>
+          <div>
+            <Typography>
                 {props.sitter.sitter_phone_number}
             </Typography>
           </div>
-          <div className={props.column}>
+          <div>
             <Typography className={props.secondaryHeading}>
                 Stays: {props.sitter.sitter_phone_number}
             </Typography>
@@ -97,47 +102,47 @@ const Sitter = props => (
             <Divider />
             <ExpansionPanelActions>
               <Button size="small" color="primary">
-                <Link to="/createappointment" className="nav-link">Create Appointment</Link>
+                <Link to={"/createappointment/"+props.sitter.sitter_email+"/"+props.owner.owner_email}>Create Appointment</Link>
               </Button>
             </ExpansionPanelActions>
           </div>
         )}
       </ExpansionPanel>
 )
-
+*/
 export default withStyles(styles)(class SitterList extends Component {
-    constructor(props) {
-      super(props);
-      console.log(this.props);
-      this.state = {sitters: []};
-    }
+  constructor(props) {
+    super(props);
+    console.log(this.props);
+    this.state = {sitters: []};
+  }
 
-    componentDidMount() {
-      axios.get('http://localhost:4000/sitters/')
-          .then(response => {
-            this.setState({ sitters: response.data});
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
-    }
+  componentDidMount() {
+    axios.get('http://localhost:4000/sitters/')
+        .then(response => {
+          this.setState({ sitters: response.data});
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+  }
 
-    sittersList(props) {
-      return this.state.sitters.map(function(currentSitter, i) {
-        return <Sitter auth={props.auth} sitter={currentSitter} key={i} />;
-      })
-    }
+  sittersList(props) {
+    return this.state.sitters.map(function(currentSitter, i) {
+      return <Sitter owner={props.owner} auth={props.auth} sitter={currentSitter} key={i} />;
+    })
+  }
 
-    render() {
-        console.log(this.props);
-        return (
-            <div>
-              <h3>Sitters!</h3>
-              
-              { this.sittersList(this.props) }
-            </div>
-        )
-    }
+  render() {
+    const { classes } = this.props;
+    console.log(classes.root);
+    return (
+        <div className={classes.root}>
+            <h3>Sitters!</h3>
+            { this.sittersList(this.props) }
+        </div>
+    );
+  }
 })
 /*
 function DetailedExpansionPanel(props) {

@@ -27,11 +27,12 @@ class App extends Component {
   };
 
   render() {
-
+    const {classes} = this.props;
+    console.log(this.state.owner);
     return (
 
-        <div className="container">
-          <Main setOwner={(event) => this.setOwner(event)} auth={this.state.auth} handleAuthChange={(event)=>this.handleAuthChange(event)}/>
+        <div >
+          <Main setOwner={(event) => this.setOwner(event)} auth={this.state.auth} handleAuthChange={(event)=>this.handleAuthChange(event)} owner={this.state.owner}/>
           <Footer/>
         </div>
     );

@@ -45,6 +45,7 @@ export default class Login extends Component {
                console.log(res.data);
                this.props.setOwner(res.data);
              });
+        this.handleClose();
 
     }
 

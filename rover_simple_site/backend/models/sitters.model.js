@@ -48,7 +48,7 @@ SitterSchema.pre("save", function(next) {
     } else {
       this.sitter_overall_rating = (this.sitter_score * ((10 - this.sitter_stays) / 10)) + (this.sitter_rating * (this.sitter_stays / 10));
     }
-    this.sitter_rating_rounded = this.sitter_rating.toFixed(2)
+    this.sitter_rating_rounded = this.sitter_rating.toFixed(2);
     next();
 });
 

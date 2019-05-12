@@ -16,20 +16,34 @@ import Login from './login.component';
 import Paper from '@material-ui/core/Paper';
 import SwipeableTemporaryDrawer from './swipeDrawer.component';
 import logo from '../logo.png';
-
+import SearchBar from './search-bar.component';
 const styles = theme => ({
-  root: {
+  appBar: {
+    position: 'sticky',
+    boxShadow: 'none',
+    borderBottom: `1px solid ${theme.palette.grey['100']}`,
+    backgroundColor: 'white',
 
   },
   inline: {
-    display: 'inline'
+    display: 'inline',
+    minWidth: 'auto'
   },
   flex: {
     display: 'flex',
-    [theme.breakpoints.down('sm')]: {
-      display: 'flex',
       justifyContent: 'space-evenly',
       alignItems: 'center'
+  },
+  link: {
+    textDecoration: 'none',
+  },
+  productLogo: {
+    display: 'inline-block',
+    borderLeft: `1px solid ${theme.palette.grey['A100']}`,
+    marginLeft: 32,
+    paddingLeft: 24,
+    [theme.breakpoints.up('md')]: {
+      paddingTop: '1.5em'
     }
   },
   tagline: {
@@ -37,13 +51,42 @@ const styles = theme => ({
     marginLeft: 10,
     [theme.breakpoints.up('md')]: {
       paddingTop: '0.8em'
+    },
+    color: '#24a777'
+  },
+  iconContainer: {
+    display: 'none',
+    [theme.breakpoints.down('sm')]: {
+      display: 'block'
     }
   },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
+  iconButton: {
+    position: 'absolute',
+    left: '24px',
   },
-});
+  tabContainer: {
+    marginLeft: 32,
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
+    }
+  },
+  tabItem: {
+    paddingTop: 20,
+    paddingBottom: 20,
+    minWidth: 'auto'
+  },
+  login: {
+    display: 'table-cell'
+  },
+  signup: {
+    display: 'table-cell',
+    paddingLeft: '10px'
+  },
+  rover: {
+    marginRight: 'auto',
+    paddingLeft: '75px',
+  }
+})
 
 
 
@@ -77,66 +120,76 @@ export default withStyles(styles)(class NavBar extends Component {
 
   render() {
 
-    const classes = this.props;
+    const { classes } = this.props;
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
-
     return (
       <div>
         <FormGroup>
           <FormControlLabel
             control={
-              <Switch checked={classes.auth} onChange={(event)=>this.props.handleAuthChange(event)} aria-label="LoginSwitch" />
+              <Switch checked={this.props.auth} onChange={(event)=>this.props.handleAuthChange(event)} aria-label="LoginSwitch" />
             }
-            label={classes.auth ? 'Logout' : 'Login'}
+            label={this.props.auth ? 'Logout' : 'Login'}
           />
         </FormGroup>
-        <AppBar position="static">
-          <Toolbar>
-            <IconButton className={classes.inline} color="inherit" aria-label="Menu">
-              <SwipeableTemporaryDrawer auth={classes.auth}/>
-            </IconButton>
-            <Typography variant="h6" color="inherit" className={classes.tagline}>
-              <a className={classes.inline} href="https://rover.com" target="_blank" rel="noopener">
-                <img src={logo} width="30" height="30" alt="rover.com" />
-              </a>
-              <Link to="/" className="nav-link">Rover</Link>
-            </Typography>
-            {classes.auth && (
-              <div>
-                <IconButton
-                  aria-owns={open ? 'menu-appbar' : undefined}
-                  aria-haspopup="true"
-                  onClick={this.handleMenu}
-                  color="inherit"
-                >
-                  <AccountCircle />
-                </IconButton>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={open}
-                  onClose={this.handleClose}
-                >
-                  <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                </Menu>
-              </div>
+        <AppBar position="relative" color='default' className={classes.appbar}>
+          <Toolbar className={classes.flex}>
+              <IconButton color="inherit" aria-label="Menu" className={classes.iconButton}>
+                <SwipeableTemporaryDrawer auth={this.props.auth}/>
+              </IconButton>
+              <Typography variant="h6" className={classes.rover}>
+                <a href="https://rover.com" target="_blank" rel="noopener" className={classes.inline}>
+                  <img src={logo} width="30" height="30" alt="rover.com" />
+                </a>
+                <Link to="/"  className={classes.link}><span className={classes.tagline}>Rover</span></Link>
+              </Typography>
+              {this.props.auth && (
+                <div className={classes.authorize}>
+                  <IconButton
+                    aria-owns={open ? 'menu-appbar' : undefined}
+                    aria-haspopup="true"
+                    onClick={this.handleMenu}
+                    color="inherit"
+                  >
+                    <AccountCircle />
+                  </IconButton>
+                  <Menu
+                    id="menu-appbar"
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    open={open}
+                    onClose={this.handleClose}
+                  >
+                    <MenuItem onClick={this.handleClose}>Profile</MenuItem>
+                  </Menu>
+                </div>
+              )}
+
+              <SearchBar />
+
+            {!this.props.auth && (
+
+                  <div className={classes.inline}>
+                    <div className={classes.login}>
+                      <Login setOwner={(event)=>this.props.setOwner(event)}/>
+                    </div>
+                    <div className={classes.signup}>
+                      <SignUp setOwner={(event)=>this.props.setOwner(event)}/>
+                    </div>
+                  </div>
+
             )}
-            {!classes.auth && (
-                <Paper>
-                  <Login setOwner={(event)=>this.props.setOwner(event)}/>
-                  <SignUp setOwner={(event)=>this.props.setOwner(event)}/>
-                </Paper>
-            )}
+
           </Toolbar>
+
         </AppBar>
       </div>
     );

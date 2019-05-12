@@ -45,6 +45,21 @@ dbRoutes.route('/initialize').post(function(req, res) {
     });
 });
 
+ownerRoutes.route('/search/:search').get(function(req, res) {
+  Owner.find( { $text: { $search : req.params.search } },
+              { score : { $meta: 'textScore' } } )
+        .sort( {
+          score: { $meta : 'textScore' }
+        } )
+        .exec(function(err, model) {
+          if (err){
+            console.log(err);
+          }else{
+            res.json(model);
+          }
+        });
+})
+
 sitterRoutes.route('/').get(function(req, res) {
   Sitter.find({
     // Search Filters
@@ -232,6 +247,10 @@ function handleAddRequest(route, schema, name, accessor){
           .then(model => {
             res.status(200).json({name: name+' added successfully'});
             pushToRoverDB(model, accessor);
+            let modelName = name + '_name';
+            let modelEmail = name + '_email';
+            schema.index({modelName: 'text'});
+            schema.index({modelEmail: 'text'});
           })
           .catch(err => {
             res.status(400).send('adding '+name+' sitter failed');
@@ -246,12 +265,6 @@ function pushToRoverDB(model,accessor){
     } else {
       db[accessor].push(model._id);
       db.save()
-        .then(db => {
-          res.status(200).json({'db': 'db updated'});
-        })
-        .catch(err => {
-          res.status(400).send('updating db failed');
-        });
     }
   });
 };

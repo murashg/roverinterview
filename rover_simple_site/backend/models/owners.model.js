@@ -2,13 +2,15 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 let OwnerSchema = new Schema({
     owner_email: {
-        type: String
+        type: String,
+        index: true
     },
     owner_phone_number: {
-        type: String
+        type: String,
     },
     owner_name: {
-        type: String
+        type: String,
+        index: true
     },
     owner_dogs: [{
         type: String
@@ -26,4 +28,6 @@ let OwnerSchema = new Schema({
         }
     }]
 });
+OwnerSchema.index({owner_name: 'text'});
+OwnerSchema.index({owner_email: 'text'});
 module.exports = mongoose.model('Owner', OwnerSchema);
