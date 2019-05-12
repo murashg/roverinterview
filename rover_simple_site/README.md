@@ -5,15 +5,20 @@ I like the idea of swipeable tabs for ui with a changing button.
 Create appointment could be a form dialog.
 Mobile first.
 sitter collection is indexed on overall rating.
-Sitter query should
+
+##Won't get to
+sanitizing inputs
+bottom button that changes use depending on components
+ui improvements
+ux improvements
+
 
 ##Site UX flow
 Owner logs in.  Then can look at past appointments or choose to look at sitters or schedule new appointment
 From sitter list owner can look at image, name, and rating of top sitters, upon clicking will bring up text of sitter. can then create appointment with sitter.
 
-
 ##Todo
-Core Functionality ~70%
+Core Functionality ~60%
 TESTING ~0%
 UI/UX thought ~50%
 Abstracting ~25%

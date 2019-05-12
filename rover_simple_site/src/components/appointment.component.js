@@ -59,7 +59,7 @@ const styles = theme => ({
   }
 });
 
-export default withStyles(styles)(class Sitter extends Component {
+export default withStyles(styles)(class Appointment extends Component {
   constructor(props){
     super(props);
   }
@@ -67,44 +67,31 @@ export default withStyles(styles)(class Sitter extends Component {
   render(props) {
     const { classes } = this.props;
     return (
-      <div className={classes.root}>
+      <div>
         <ExpansionPanel>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <div className={classes.expansionpanel}>
                 <Typography>
-                    <img src={this.props.sitter.sitter_image} alt="sitter" className="img-thumbnail"/>
+                    Sitter: {this.props.appointment.appointment_sitter.sitter_name}
                 </Typography>
                 <Typography>
-                    {this.props.sitter.sitter_name}
-                </Typography>
-                <Typography>
-                    Rating: {this.props.sitter.sitter_rating_rounded}
+                    Owner: {this.props.appointment.appointment_owner.owner_name}
                 </Typography>
             </div>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <div className={classes.expansionpanel}>
               <Typography>
-                  {this.props.sitter.sitter_email}
+                  Start Date: {this.props.appointment.appointment_startDate}
               </Typography>
               <Typography>
-                  {this.props.sitter.sitter_phone_number}
+                  End Date: {this.props.appointment.appointment_endDate}
               </Typography>
-              <Typography className={this.props.secondaryHeading}>
-                  Stays: {(this.props.sitter.sitter_stays > 0) ? this.props.sitter.sitter_stays : 0}
+              <Typography>
+                  Comments: {this.props.appointment.appointment_text}
               </Typography>
             </div>
           </ExpansionPanelDetails>
-          {this.props.auth && (
-            <div>
-              <Divider />
-              <ExpansionPanelActions>
-                <Button size="small" color="primary">
-                  <Link to={"/createappointment/"+this.props.sitter.sitter_email+"/"+this.props.owner.owner_email}>Create Appointment</Link>
-                </Button>
-              </ExpansionPanelActions>
-            </div>
-          )}
         </ExpansionPanel>
       </div>
     );

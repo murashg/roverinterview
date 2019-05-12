@@ -112,6 +112,7 @@ export default withStyles(styles)(class NavBar extends Component {
 
   handleClose = () => {
     this.setState({ anchorEl: null });
+    this.props.logout();
   };
 
   openDrawer = () => {
@@ -168,7 +169,7 @@ export default withStyles(styles)(class NavBar extends Component {
                     open={open}
                     onClose={this.handleClose}
                   >
-                    <MenuItem onClick={this.handleClose}>Profile</MenuItem>
+                    <MenuItem onClick={this.handleClose}>LogOut</MenuItem>
                   </Menu>
                 </div>
               )}

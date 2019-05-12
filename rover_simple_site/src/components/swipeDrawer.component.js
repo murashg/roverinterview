@@ -80,13 +80,6 @@ class SwipeableTemporaryDrawer extends React.Component {
               <CreateOwner name="Create Owner" submitted={(event)=>this.toggleDrawer('left',false)} setOwner={(event)=>this.props.setOwner(event)} shouldSetOwner={false}/>
             </ListItemText>
           </ListItem>
-          <Link to='/createappointment'>
-            <ListItem button key='Appointments' className={classes.listItem}>
-              <ListItemText>
-                Create Appointment
-              </ListItemText>
-            </ListItem>
-          </Link>
         </List>
       )}
     </div>

@@ -15,7 +15,7 @@ export default class Main extends Component {
   render() {
     return (
       <Router>
-          <NavBar setOwner={(event) => this.props.setOwner(event)} auth={this.props.auth} handleAuthChange={(event)=>this.props.handleAuthChange(event)}/>
+          <NavBar logout={() => this.props.logout()}setOwner={(event) => this.props.setOwner(event)} auth={this.props.auth} handleAuthChange={(event)=>this.props.handleAuthChange(event)}/>
           <Route path="/" exact component={SplashPage} />
           <Route path="/sitters" render={(props) => <Sitters {...props} auth={this.props.auth} owner={this.props.owner}/>} />
           <Route path="/owners" exact component={Owners} />

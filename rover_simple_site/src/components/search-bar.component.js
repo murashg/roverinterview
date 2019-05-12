@@ -5,6 +5,7 @@ import InputBase from '@material-ui/core/InputBase';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import axios from 'axios';
 import Popover from '@material-ui/core/Popover';
+import List from '@material-ui/core/List';
 
 const Result = props => {
   return (
@@ -24,6 +25,8 @@ const Result = props => {
         open={props.open}
         onClose={props.handleClose}
       >
+        <List>
+        </List>
         {props.result.owner_name}
       </Popover>
     </div>
@@ -87,7 +90,7 @@ export default withStyles(styles)(class SearchBar extends Component {
     this.onChangeInput = this.onChangeInput.bind(this);
 
     this.state = {
-      input: String,
+      input: '',
       results: [],
       anchorEl: null
     }
@@ -101,7 +104,8 @@ export default withStyles(styles)(class SearchBar extends Component {
 
   onChangeInput(e){
     this.setState({
-      input: e.target.value
+      input: e.target.value,
+      anchorEl: e.currentTarget
     });
     console.log(this.state.input);
     axios.get('http://localhost:4000/owners/search/'+this.state.input)
@@ -132,14 +136,18 @@ export default withStyles(styles)(class SearchBar extends Component {
   handleClose = () => {
     this.setState({
       anchorEl: null,
-      results: []
-    })
+      results: [],
+      input: ''
+    });
   }
 
   resultsList(open, anchorEl, handleClose) {
-    return this.state.results.map(function(currentResult, i) {
-      return <Result anchorEl={anchorEl} open={open} result={currentResult} key={i} handleClose={handleClose}/>;
-    })
+    console.log(this.state.results);
+    if (this.state.results.length > 0){
+      return this.state.results.map(function(currentResult, i) {
+        return <Result anchorEl={anchorEl.anchorEl} open={open} result={currentResult} key={i} handleClose={handleClose}/>;
+      });
+    }
   }
 
   render(){
@@ -161,6 +169,7 @@ export default withStyles(styles)(class SearchBar extends Component {
               }}
               onChange={this.onChangeInput}
               onClick={this.handleClick}
+              value={this.state.input}
             />
           </div>
         </div>

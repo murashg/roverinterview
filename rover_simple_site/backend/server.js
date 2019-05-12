@@ -137,6 +137,27 @@ ownerRoutes.route('/update/:id').post(function(req, res) {
   });
 });
 
+appointmentRoutes.route('/').get(function(req, res) {
+  Appointment.find({
+      // Search Filters
+    },
+    null, // Columns to Return
+    {
+      skip:0, // Starting Row
+      limit:10, // Ending Row
+    })
+    .populate('appointment_sitter')
+    .populate('appointment_owner')
+    .exec(
+      function(err, model) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.json(model);
+        }
+      });
+});
+
 appointmentRoutes.route('/update/:id').post(function(req, res) {
   Owner.findOne({owner_email:id}, function(err, owner) {
     if (!owner) {
@@ -249,11 +270,11 @@ function handleAddRequest(route, schema, name, accessor){
             pushToRoverDB(model, accessor);
             let modelName = name + '_name';
             let modelEmail = name + '_email';
-            schema.index({modelName: 'text'});
-            schema.index({modelEmail: 'text'});
+            //schema.index({modelName: 'text'});
+            //schema.index({modelEmail: 'text'});
           })
           .catch(err => {
-            res.status(400).send('adding '+name+' sitter failed');
+            console.log(err);
           });
   });
 };

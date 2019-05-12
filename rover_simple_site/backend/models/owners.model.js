@@ -3,14 +3,14 @@ const Schema = mongoose.Schema;
 let OwnerSchema = new Schema({
     owner_email: {
         type: String,
-        index: true
+        index: 'text'
     },
     owner_phone_number: {
         type: String,
     },
     owner_name: {
         type: String,
-        index: true
+        index: 'text'
     },
     owner_dogs: [{
         type: String
@@ -28,6 +28,9 @@ let OwnerSchema = new Schema({
         }
     }]
 });
-OwnerSchema.index({owner_name: 'text'});
-OwnerSchema.index({owner_email: 'text'});
+OwnerSchema.pre('save',function(next) {
+  OwnerSchema.index({owner_name: 'text'});
+  OwnerSchema.index({owner_email: 'text'});
+  next();
+});
 module.exports = mongoose.model('Owner', OwnerSchema);

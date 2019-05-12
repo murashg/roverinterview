@@ -2,16 +2,19 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 let SitterSchema = new Schema({
     sitter_email: {
-        type: String
+        type: String,
+        index: 'text'
     },
     sitter_phone_number: {
         type: String
     },
     sitter_name: {
-        type: String
+        type: String,
+        index: 'text'
     },
     sitter_overall_rating: {
-        type: Number
+        type: Number,
+        index: -1
     },
     sitter_rating_rounded: {
         type: Number
@@ -38,11 +41,16 @@ let SitterSchema = new Schema({
         }
     }]
 });
-
-SitterSchema.index({sitter_overall_rating: -1})
-
+/*
+SitterSchema.index({sitter_overall_rating: -1});
+SitterSchema.index({sitter_name: 'text'});
+SitterSchema.index({sitter_email: 'text'});
+*/
 SitterSchema.pre("save", function(next) {
   console.log("im in pre save");
+  SitterSchema.index({sitter_overall_rating: -1});
+  SitterSchema.index({sitter_name: 'text', sitter_email: 'text'});
+  SitterSchema.index({sitter_email: 'text'});
     if (this.sitter_stays >= 10) {
       this.sitter_overall_rating = this.sitter_rating;
     } else {

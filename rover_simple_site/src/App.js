@@ -22,6 +22,13 @@ class App extends Component {
     })
   }
 
+  logOut(){
+    this.setState({
+      owner: '',
+      auth: false
+    })
+  }
+
   handleAuthChange = event => {
     this.setState({ auth: event.target.checked });
   };
@@ -32,7 +39,7 @@ class App extends Component {
     return (
 
         <div >
-          <Main setOwner={(event) => this.setOwner(event)} auth={this.state.auth} handleAuthChange={(event)=>this.handleAuthChange(event)} owner={this.state.owner}/>
+          <Main logout={() => this.logOut()} setOwner={(event) => this.setOwner(event)} auth={this.state.auth} handleAuthChange={(event)=>this.handleAuthChange(event)} owner={this.state.owner}/>
           <Footer/>
         </div>
     );
