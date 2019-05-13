@@ -22,6 +22,7 @@ sitter collection is indexed on overall rating.
   -frontend for particular owner/sitter/appointment
 -still have css bugs
 -finishing kotlin jar to read input
+  -add loading bar to db initialization
 -search functionality improvements (right now only searches owner collection.)
   -best way would be to use a 3rd party library like elasticache or algolia)
   -rather than searching onChange, search on 'enter' or clicking icon
@@ -29,6 +30,7 @@ sitter collection is indexed on overall rating.
 -implement test framework
 -comment out components
 -remove prototype code
+-remove console.logs used for debugging
 
 
 ##Site UX flow
