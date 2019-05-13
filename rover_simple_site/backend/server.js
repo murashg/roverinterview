@@ -305,20 +305,49 @@ function addToDB(words) {
   });
 }
 
-dbRoutes.route('/initialize').post(function(req, res) {
+async function asyncForEach(array, callback) {
+  var c = 0;
+  for await (const line of array){
+    callback(line, () => {
+      next();
+    }).then(()=>{
+      c++;
+      console.log(c);
+    });
+  }
+}
+
+
+/* I don't know if strongly consistent is possible with javascript */
+/* I'm leaning towards not */
+/* I don't think it is possible to sequentially loop through a list and call
+  async functions in javascript to add items to the database.  therefore i get duplicate entries
+  and sitters don't get rated correctly.  This would be trivial in Kotlin */
+dbRoutes.route('/initialize').post(async function(req, res) {
+  /*
   let db = new RoverDB();
   db.save()
     .then(async () => {
       var data = fs.readFileSync('reviews.csv');
       var lines = data.toString().split(/\r?\n/).slice(1);
       lines = lines.slice(0,lines.length-1);
-      for (const words of lines){
+      var c = 0;
+      await asyncForEach(lines, async (words) => {
         await addToDB(words);
-      }
+        c++;
+        console.log(c);
+      })
     })
     .catch(err => {
       res.status(400).send('db initialization failed');
     });
+    */
+  var data = fs.readFileSync('reviews.csv');
+  var lines = data.toString().split(/\r?\n/).slice(1);
+  lines = lines.slice(0,lines.length-1);
+  await asyncForEach(lines, async (words) => {
+    await addToDB(words);
+  })
   console.log('done');
 });
 

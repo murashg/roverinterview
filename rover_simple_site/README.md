@@ -1,3 +1,11 @@
+## Running site
+'npm start' will start the frontend
+'nodemon server' will start the backend server
+'mongod' to start the mongo db
+then when you are in the site click the initialize db button to initialize the database
+ -//note there are bugs with the initialization function that reads the reviews.csv and uploads data to database, this needs
+ --// to be rewritten in a different language to ensure sequential processing.  Javascript causes problems.
+
 ## Ideas
 Would be best if owner and sitter interact through website.  Not sure if displaying phone or email are good ideas.
 Sitter list should have slider to choose how many to search, and should load 10 at a time.
@@ -7,10 +15,20 @@ Mobile first.
 sitter collection is indexed on overall rating.
 
 ##Won't get to
-sanitizing inputs
-bottom button that changes use depending on components
-ui improvements
-ux improvements
+-sanitizing inputs
+-ui improvements
+-ux improvements
+  -bottom button that changes use depending on components
+  -frontend for particular owner/sitter/appointment
+-still have css bugs
+-finishing kotlin jar to read input
+-search functionality improvements (right now only searches owner collection.)
+  -best way would be to use a 3rd party library like elasticache or algolia)
+  -rather than searching onChange, search on 'enter' or clicking icon
+-port to AWS, rework backend to use serverless stack.  Should have done that from the beginning.
+-implement test framework
+-comment out components
+-remove prototype code
 
 
 ##Site UX flow
@@ -24,6 +42,8 @@ UI/UX thought ~50%
 Abstracting ~25%
 Optimization ~60%
 
+
+*** boiler plate ***
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
