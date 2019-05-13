@@ -8,11 +8,15 @@ const sitterRoutes = express.Router();
 const ownerRoutes = express.Router();
 const appointmentRoutes = express.Router();
 const PORT = 4000;
+const fs = require('fs');
+
 
 let Sitter = require('./models/sitters.model');
 let Owner = require('./models/owners.model');
 let Appointment = require('./models/appointments.model');
 let RoverDB = require('./models/db.model');
+
+
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -33,16 +37,289 @@ handleGetIdRequest(appointmentRoutes, Appointment);
 
 handleAddRequest(sitterRoutes, Sitter, 'sitter', 'db_sitters');
 handleAddRequest(ownerRoutes, Owner, 'owner', 'db_owners');
+/*
+async function getSitterId(sitter){
+  return await Sitter.findOne({sitter_email: sitter.sitter_email},function(err, s){
+    console.log(s);
+    if (!s){
+       return saveSitter(sitter);
+    }else{
+      return s._id;
+    }
+  });
+}
+async function saveSitter(sitter){
+  var s_id;
+  console.log('not found');
+  let newSitter = new Sitter(sitter);
+  await newSitter.save()
+                 .then(function(newS) {
+                   s_id = newS._id;
+                 })
+                 .catch(err => {
+                   console.log(err);
+                 });
+  return s_id;
+
+}
+
+async function processLine(line){
+  var sitter = {
+    sitter_rating: line[0],
+    sitter_image: line[1],
+    sitter_bio: line[3],
+    sitter_name: line[6],
+    sitter_phone_number: line[9],
+    sitter_email: line[10]
+  }
+  var owner = {
+    owner_bio: line[3],
+    owner_image: line[4],
+    owner_dogs: line[5].split('|'),
+    owner_name: line[7],
+    owner_phone_number: line[11],
+    owner_email: line[12]
+  }
+  var appointment = {
+    appointment_sitter: '',
+    appointment_owner: '',
+    appointment_endDate: line[2],
+    appointment_text: line[3],
+    appointment_startDate: line[8]
+  }
+  //does sitter exist ? save sitter and get id : get sitter_id
+  //does owner exist ? save owner and get id : get owner_id
+  //create appointment between sitter and owner
+  var s_id;
+  s_id = await getSitterId(sitter);
+  console.log(s_id);
+}
+*/
+
+function calcSitterScore(s) {
+  let set = new Set();
+  for (var i = 0; i < s.length; i++){
+    set.add(s.charAt(i));
+  }
+  return 5 * (set.size / 26);
+}
+
+function addToDB(words) {
+  var line = words.split(",");
+  var sitter = {
+    sitter_rating: 0,
+    sitter_image: line[1],
+    sitter_bio: line[3],
+    sitter_name: line[6],
+    sitter_phone_number: line[9],
+    sitter_email: line[10],
+    sitter_history: [],
+    sitter_score: Number,
+    sitter_overall_rating: Number,
+    sitter_stays: 0
+  }
+  sitter.sitter_score = calcSitterScore(sitter.sitter_name);
+  sitter.sitter_overall_rating = sitter.sitter_score;
+  var owner = {
+    owner_bio: line[3],
+    owner_image: line[4],
+    owner_dogs: line[5].split('|'),
+    owner_name: line[7],
+    owner_phone_number: line[11],
+    owner_email: line[12],
+    owner_history: []
+  }
+  var appointment = {
+    appointment_rating: line[0],
+    appointment_sitter: '',
+    appointment_owner: '',
+    appointment_endDate: line[2],
+    appointment_text: line[3],
+    appointment_startDate: line[8]
+  }
+  //omg why does javascript operate everything async.
+  //I know why, but I'm just not familiar enough with callbacks to handle this yet.
+  //please give me coroutines.
+
+  //does sitter exist ? save sitter and get id : get sitter_id
+  //does owner exist ? save owner and get id : get owner_id
+  //create appointment between sitter and owner
+  /*
+  var s_id;
+  s_id = await getSitterId(sitter);
+  console.log(s_id);
+  var o_id;
+  */
+  Owner.findOne({owner_email: owner.owner_email}, function(err, o){
+    if (!o){
+      let newOwner = new Owner(owner);
+      newOwner.save()
+              .then(newOwner => {
+                //pushToRoverDB(newOwner, 'db_owners');
+                Sitter.findOne({sitter_email: sitter.sitter_email}, function(err, s){
+                  if (!s){
+                    let newSitter = new Sitter(sitter);
+                    newSitter.save()
+                            .then(newSitter => {
+                              //pushToRoverDB(newSitter,'db_sitters');
+                              appointment.appointment_sitter = newSitter._id;
+                              appointment.appointment_owner = newOwner._id;
+                              let newAppointment = new Appointment(appointment);
+                              newAppointment.save()
+                                            .then(newAppointment => {
+                                              newSitter.sitter_history.push(newAppointment._id);
+                                              newSitter.sitter_rating = (newAppointment.appointment_rating + newSitter.sitter_rating * newSitter.sitter_stays) / (newSitter.sitter_stays + 1);
+                                              newSitter.sitter_stays = newSitter.sitter_stays + 1;
+                                              newSitter.save()
+                                                    .then(sitter2 => {
+                                                      //console.log('done');
+                                                    })
+                                                    .catch(err => {
+                                                      console.log(err);
+                                                    });
+                                              newOwner.owner_history.push(newAppointment._id);
+                                              newOwner.save()
+                                                    .then(owner2 => {
+                                                      //console.log('done2');
+                                                    })
+                                                    .catch(err => {
+                                                      console.log(err);
+                                                    });
+                                              //pushToRoverDB(newAppointment,'db_appointments');
+                                            })
+                                            .catch(err => {
+                                              console.log(err);
+                                            });
+                            })
+                            .catch(err => {
+                              console.log(err);
+                            });
+                  } else {
+                    appointment.appointment_sitter = s._id;
+                    appointment.appointment_owner = newOwner._id;
+                    let newAppointment = new Appointment(appointment);
+                    newAppointment.save()
+                                  .then(newAppointment => {
+                                    s.sitter_history.push(newAppointment._id);
+                                    s.sitter_rating = (newAppointment.appointment_rating + s.sitter_rating * s.sitter_stays) / (s.sitter_stays + 1);
+                                    s.sitter_stays = s.sitter_stays + 1;
+                                    s.save()
+                                          .then(sitter2 => {
+                                            //console.log('done');
+                                          })
+                                          .catch(err => {
+                                            console.log(err);
+                                          });
+                                    newOwner.owner_history.push(newAppointment._id);
+                                    newOwner.save()
+                                          .then(owner2 => {
+                                            //console.log('done2');
+                                          })
+                                          .catch(err => {
+                                            console.log(err);
+                                          });
+                                    //pushToRoverDB(newAppointment,'db_appointments');
+                                  })
+                                  .catch(err => {
+                                    console.log(err);
+                                  });
+                  }
+                });
+              })
+              .catch(err => {
+                console.log(err);
+              });
+    } else {
+      Sitter.findOne({sitter_email: sitter.sitter_email}, function(err, s){
+        if (!s){
+          let newSitter = new Sitter(sitter);
+          newSitter.save()
+                  .then(newSitter => {
+                    //pushToRoverDB(newSitter,'db_sitters');
+                    appointment.appointment_sitter = newSitter._id;
+                    appointment.appointment_owner = o._id;
+                    let newAppointment = new Appointment(appointment);
+                    newAppointment.save()
+                                  .then(newAppointment => {
+                                    newSitter.sitter_history.push(newAppointment._id);
+                                    newSitter.sitter_rating = (newAppointment.appointment_rating + newSitter.sitter_rating * newSitter.sitter_stays) / (newSitter.sitter_stays + 1);
+                                    newSitter.sitter_stays = newSitter.sitter_stays + 1;
+                                    newSitter.save()
+                                          .then(sitter2 => {
+                                            //console.log('done');
+                                          })
+                                          .catch(err => {
+                                            console.log(err);
+                                          });
+                                    o.owner_history.push(newAppointment._id);
+                                    o.save()
+                                          .then(owner2 => {
+                                            //console.log('done2');
+                                          })
+                                          .catch(err => {
+                                            console.log(err);
+                                          });
+                                    //pushToRoverDB(newAppointment,'db_appointments');
+                                  })
+                                  .catch(err => {
+                                    console.log(err);
+                                  });
+                  })
+                  .catch(err => {
+                    console.log(err);
+                  });
+        } else {
+          appointment.appointment_sitter = s._id;
+          appointment.appointment_owner = o._id;
+          let newAppointment = new Appointment(appointment);
+          newAppointment.save()
+                        .then(newAppointment => {
+                          //console.log(newAppointment);
+                          //console.log(s);
+                          s.sitter_history.push(newAppointment._id);
+                          s.sitter_rating = (newAppointment.appointment_rating + s.sitter_rating * s.sitter_stays) / (s.sitter_stays + 1);
+                          s.sitter_stays = s.sitter_stays + 1;
+                          s.save()
+                                .then(sitter2 => {
+                                  //console.log('done');
+                                })
+                                .catch(err => {
+                                  console.log(err);
+                                });
+                          o.owner_history.push(newAppointment._id);
+                          o.save()
+                                .then(owner2 => {
+                                  //console.log('done2');
+                                })
+                                .catch(err => {
+                                  console.log(err);
+                                });
+                          //pushToRoverDB(newAppointment,'db_appointments');
+                        })
+                        .catch(err => {
+                          console.log(err);
+                        });
+        }
+      });
+    }
+  });
+}
 
 dbRoutes.route('/initialize').post(function(req, res) {
   let db = new RoverDB();
   db.save()
-    .then(db => {
-      res.status(200).json({'db': 'db initialized'});
+    .then(async () => {
+      var data = fs.readFileSync('reviews.csv');
+      var lines = data.toString().split(/\r?\n/).slice(1);
+      lines = lines.slice(0,lines.length-1);
+      for (const words of lines){
+        await addToDB(words);
+      }
     })
     .catch(err => {
       res.status(400).send('db initialization failed');
     });
+  console.log('done');
 });
 
 ownerRoutes.route('/search/:search').get(function(req, res) {

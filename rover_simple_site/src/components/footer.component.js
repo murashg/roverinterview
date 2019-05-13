@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import InitializeDb from './initializedb.component';
 
-export default class Login extends Component {
+export default class Footer extends Component {
   render() {
     return (
       <div>
-
+        <InitializeDb/>
       </div>
     );
   }
